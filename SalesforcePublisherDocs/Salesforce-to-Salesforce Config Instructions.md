@@ -4,87 +4,95 @@ Connected App, Auth Provider, Named Credential
 
 This document accompanies the Dreamforce 2016 session titled [Publishing Data to REST APIs with Lightning Process Builder](https://success.salesforce.com/Sessions?eventId=a1Q3000000qQOd9#/session/a2q3A000000LBSAQA4)
 
-1. In the target org, create a Connected App to allow the source org to authenticate via OAuth 2.0
+* In the target org, create a Connected App to allow the source org to authenticate via OAuth 2.0
 
-    1. Navigate to Setup -> Build -> Create -> Apps
+    * Navigate to Setup -> Build -> Create -> Apps
 
-    2. Next to "Connected Apps" click New
+    * Next to "Connected Apps" click New
 
-    3. Fill in required Basic Information fields
+    * Fill in required Basic Information fields
 
-    4. Check the "Enable OAuth Settings" box
+    * Check the "Enable OAuth Settings" box
 
-        1. Enter "https://TBD" for Callback URL - we will update this later
+        * Enter "https://TBD" for Callback URL - we will update this later
 
-        2. Apply "Selected OAuth Scopes" as shown below
+        * Apply "Selected OAuth Scopes" as shown below
 
-    5. Click Save
+    * Click Save
 
-    6. Take note of the Consumer Key and Consumer Secret (treat this secret like you would a password)![image alt text](image_0.png)
+    * Take note of the Consumer Key and Consumer Secret (treat this secret like you would a password)
 
-2. In the source org, create an Auth Provider to allow access to the target org
+![image alt text](image_0.png)
 
-    7. Navigate to Setup -> Administer -> Security Controls -> Auth Providers
+* In the source org, create an Auth Provider to allow access to the target org
 
-    8. Next to "Auth Providers" click New
+    * Navigate to Setup -> Administer -> Security Controls -> Auth Providers
 
-    9. Select Salesforce as the provider type, then provide a name and URL suffix
+    * Next to "Auth Providers" click New
 
-    10. Fill in the Consumer Key and Consumer Secret as noted during creation of the Connected App in the target org
+    * Select Salesforce as the provider type, then provide a name and URL suffix
 
-    11. Authorize Endpoint URL is [https://login.salesforce.com/services/oauth2/authorize](https://login.salesforce.com/services/oauth2/authorize)
+    * Fill in the Consumer Key and Consumer Secret as noted during creation of the Connected App in the target org
 
-    12. Token Endpoint URL is [https://login.salesforce.com/services/oauth2/token](https://login.salesforce.com/services/oauth2/token)
+    * Authorize Endpoint URL is [https://login.salesforce.com/services/oauth2/authorize](https://login.salesforce.com/services/oauth2/authorize)
 
-    13. Default Scopes is "refresh_token full"
+    * Token Endpoint URL is [https://login.salesforce.com/services/oauth2/token](https://login.salesforce.com/services/oauth2/token)
 
-    14. Click "Automatically create a registration handler"
+    * Default Scopes is "refresh_token full"
 
-    15. Execute Registration As should be selected (pick a System Admin or similar user)
+    * Click "Automatically create a registration handler"
 
-    16. Click Save
+    * Execute Registration As should be selected (pick a System Admin or similar user)
 
-    17. Take note of the Callback URL![image alt text](image_1.png)
+    * Click Save
 
-3. In the target org, update the Connected App
+    * Take note of the Callback URL
 
-    18. Navigate to Setup -> Build -> Create -> Apps
+![image alt text](image_1.png)
 
-    19. Click Edit next to your Connected App
+* In the target org, update the Connected App
 
-    20. Update the Callback URL to the value noted during creation of your Auth Provider in the source org![image alt text](image_2.png)
+    * Navigate to Setup -> Build -> Create -> Apps
 
-4. In the source org, create a Named Credential to be used by your Apex code to connect to the target org
+    * Click Edit next to your Connected App
 
-    21. Navigate to Setup -> Administer -> Security Controls -> Named Credentials
+    * Update the Callback URL to the value noted during creation of your Auth Provider in the source org
 
-    22. Click New
+![image alt text](image_2.png)
 
-    23. Provide a Label, Name, and the URL for the target org (in the example below I have enabled mydomain in the target org, so I'm using that URL)
+* In the source org, create a Named Credential to be used by your Apex code to connect to the target org
 
-    24. Identity Type should be Named Principal - this means regardless of which user is logged in to the source org, a single user will be used to access the target org
+    * Navigate to Setup -> Administer -> Security Controls -> Named Credentials
 
-    25. Authentication Protocol - select OAuth 2.0
+    * Click New
 
-    26. Authentication Provider - select the Auth Provider you created earlier
+    * Provide a Label, Name, and the URL for the target org (in the example below I have enabled mydomain in the target org, so I'm using that URL)
 
-    27. Scope - refresh_token full
+    * Identity Type should be Named Principal - this means regardless of which user is logged in to the source org, a single user will be used to access the target org
 
-    28. Start Authentication Flow on Save - checked
+    * Authentication Protocol - select OAuth 2.0
 
-    29. Generate Authorization Header - checked
+    * Authentication Provider - select the Auth Provider you created earlier
 
-    30. Click Save (if you get an error here, you may need to wait a few more minutes for you last update to the Connected App in the target org to propagate and try again)
+    * Scope - refresh_token full
 
-    31. At the login prompt, log in with the username and password for the target org
+    * Start Authentication Flow on Save - checked
 
-    32. On the Allow Access screen click Allow![image alt text](image_3.png)
+    * Generate Authorization Header - checked
 
-    33. Log out of the target org and log back into the source org
+    * Click Save (if you get an error here, you may need to wait a few more minutes for you last update to the Connected App in the target org to propagate and try again)
 
-    34. Navigate to Setup -> Administer -> Security Controls -> Named Credentials
+    * At the login prompt, log in with the username and password for the target org
 
-    35. Click on your Named Credential to view the details
+    * On the Allow Access screen click Allow
 
-    36. Authentication Status	should now say "Authenticated as [your target org username]" - you are ready to reference this Named Credential in your Salesforce-to-Salesforce Apex code!
+![image alt text](image_3.png)
+
+* Log out of the target org and log back into the source org to verify successful setup
+
+    * Navigate to Setup -> Administer -> Security Controls -> Named Credentials
+
+    * Click on your Named Credential to view the details
+
+    * Authentication Status	should now say "Authenticated as [your target org username]" - you are ready to reference this Named Credential in your Salesforce-to-Salesforce Apex code!
 
